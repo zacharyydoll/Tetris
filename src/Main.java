@@ -132,12 +132,12 @@ public class Main extends Application {
     }
 
     private void displayGameOverMenu() {
-        root.getChildren().clear(); // Clear the game board
+        root.getChildren().clear();
         menu.getMenuBox().setVisible(true);
-        root.getChildren().addAll(menu.getMenuBox()); // Add the menu
+        root.getChildren().addAll(menu.getMenuBox());
         menu.updateScore(game.getScore()); // Update the displayed score
-        menu.showGameOver(); // Show the game over text
-        menu.getMenuBox().setVisible(true); // Ensure the game over menu is visible
+        menu.showGameOver();
+        menu.getMenuBox().setVisible(true);
     }
 
 }
