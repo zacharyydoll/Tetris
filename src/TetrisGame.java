@@ -12,7 +12,7 @@ public class TetrisGame {
     private int score = 0;
     private final int POINTS_PER_ROW = 100;
     private final int BASE_DELAY = 1000; //1 second delay
-    private int ACCELERATION = 20; //0 seconds
+    private int ACCELERATION = 100; //0 seconds
     private int currentDelay = BASE_DELAY;
     private Tetromino nextTetromino;
 
@@ -37,7 +37,8 @@ public class TetrisGame {
 
     private void adjustDelay(int linesCleared) {
         // Ensure the delay doesn't go below half of the base delay for safety.
-        currentDelay = Math.max(BASE_DELAY - (linesCleared * ACCELERATION), BASE_DELAY / 2);
+        currentDelay = Math.max(currentDelay - (linesCleared * ACCELERATION), 100);
+        System.out.println("Delay: " + currentDelay);
     }
 
     public void moveLeft() {
@@ -118,8 +119,8 @@ public class TetrisGame {
     }
 
     public void incrementScore(int nbRowsCleared) {
-        //100pts per row cleared
-        score += nbRowsCleared * POINTS_PER_ROW;
+        //100pts per row cleared and 50 bonus per row after the first
+        score += nbRowsCleared > 0 ? (nbRowsCleared * POINTS_PER_ROW) + (50 * (nbRowsCleared -1)) : 0;
     }
 
     public void resetGame() {
