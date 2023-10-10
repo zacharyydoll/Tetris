@@ -12,7 +12,7 @@ public abstract class Tetromino {
 
     public Tetromino(int[][] shape) {
         this.shape = shape;
-        this.x = 5;
+        this.x = 4;
         this.y = 0;
     }
 

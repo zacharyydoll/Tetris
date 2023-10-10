@@ -11,6 +11,11 @@ public class TetrisGame {
     private Tetromino currentTetromino;
     private int score = 0;
     private final int POINTS_PER_ROW = 100;
+    private final int BASE_DELAY = 1000; //1 second delay
+    private int ACCELERATION = 20; //0 seconds
+    private int currentDelay = BASE_DELAY;
+    private Tetromino nextTetromino;
+
 
     public TetrisGame() {
         this.gameBoard = new GameBoard();
@@ -23,9 +28,16 @@ public class TetrisGame {
         if(isCollision()) {
             currentTetromino.moveUp();
             gameBoard.placeTetromino(currentTetromino);
-            incrementScore(gameBoard.clearFullRows());
+            int linesCleared = gameBoard.clearFullRows();
+            incrementScore(linesCleared);
+            adjustDelay(linesCleared);
             spawnNewTetromino();
         }
+    }
+
+    private void adjustDelay(int linesCleared) {
+        // Ensure the delay doesn't go below half of the base delay for safety.
+        currentDelay = Math.max(BASE_DELAY - (linesCleared * ACCELERATION), BASE_DELAY / 2);
     }
 
     public void moveLeft() {
@@ -68,10 +80,21 @@ public class TetrisGame {
     }
 
     private void spawnNewTetromino() {
-        this.currentTetromino = TetrominoFactory.getRandomTetromino();
+        // generate the first tetromino
+        if (nextTetromino == null)
+            this.currentTetromino = TetrominoFactory.getRandomTetromino();
+         else
+            this.currentTetromino = this.nextTetromino;
+
+        this.nextTetromino = TetrominoFactory.getRandomTetromino();
+
         if(isCollision()) {
             isGameOver = true;
         }
+    }
+
+    public Tetromino getNextTetromino() {
+        return this.nextTetromino;
     }
 
     public int[][] getBoard() {
@@ -100,6 +123,7 @@ public class TetrisGame {
     }
 
     public void resetGame() {
+        currentDelay = BASE_DELAY;
         this.gameBoard = new GameBoard();
         this.isGameOver = false;
         this.score = 0;

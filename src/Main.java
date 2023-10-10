@@ -25,6 +25,7 @@ public class Main extends Application {
     private Pane root;
     private Menu menu;
     private AnimationTimer gameLoop;
+    private NextTetrominoDisplay nextTetrominoDisplay;
 
     public static void main(String[] args) {
         launch(args);
@@ -35,6 +36,11 @@ public class Main extends Application {
         menu = new Menu(this::onGameStart);
         root = new Pane();
         game = new TetrisGame();
+        nextTetrominoDisplay = new NextTetrominoDisplay();
+        nextTetrominoDisplay.setLayoutX(250);
+        nextTetrominoDisplay.setLayoutY(10);
+        root.getChildren().add(nextTetrominoDisplay);
+
 
         root.getChildren().addAll(menu.getMenuBox());
 
@@ -64,11 +70,14 @@ public class Main extends Application {
         score.setX(SCORE_TEXT_X);
         score.setY(SCORE_TEXT_Y);
         score.setVisible(true);
+        nextTetrominoDisplay.displayTetronimo(game.getNextTetromino());
 
         root.getChildren().clear();
         root.getChildren().removeIf(child -> child instanceof Rectangle ||
                 (child instanceof Text && ((Text) child).getText().startsWith("Score: ")));
         root.getChildren().add(score);
+        root.getChildren().add(nextTetrominoDisplay);
+
         int[][] board = game.getBoard();
 
         // Draw the fixed tiles on the game board
