@@ -1,6 +1,8 @@
 import Tetrominoes.Tetromino;
 import Tetrominoes.TetrominoFactory;
 
+import java.util.Map;
+
 /**
  * @author : Zachary Doll
  */
@@ -15,7 +17,12 @@ public class TetrisGame {
     private int ACCELERATION = 100; //0 seconds
     private int currentDelay = BASE_DELAY;
     private Tetromino nextTetromino;
-
+    private Difficulty difficulty = Difficulty.MEDIUM; //default difficulty
+    private static final Map<Difficulty, Integer> DELAYS = Map.of(
+            Difficulty.EASY, 1500,
+            Difficulty.MEDIUM, 100,
+            Difficulty.HARD, 20
+    );
 
     public TetrisGame() {
         this.gameBoard = new GameBoard();
@@ -35,9 +42,10 @@ public class TetrisGame {
         }
     }
 
+    //TODO : fix delay according to difficulty level
     private void adjustDelay(int linesCleared) {
-        // Ensure the delay doesn't go below half of the base delay for safety.
-        currentDelay = Math.max(currentDelay - (linesCleared * ACCELERATION), 100);
+        int baseDelay = DELAYS.get(difficulty);
+        currentDelay = baseDelay - (linesCleared * ACCELERATION);
     }
 
     public void moveLeft() {
@@ -128,5 +136,14 @@ public class TetrisGame {
         this.isGameOver = false;
         this.score = 0;
         this.spawnNewTetromino();
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+        this.currentDelay = DELAYS.get(difficulty);
+    }
+
+    public enum Difficulty {
+        EASY, MEDIUM, HARD
     }
 }

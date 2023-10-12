@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
@@ -29,8 +31,6 @@ public class Main extends Application {
     private final int SCORE_TEXT_Y = 20;
     private final Color TILE_SEPARATOR_COLOR = Color.rgb(50, 50, 50);
     private final int TILE_SEPARATOR_WIDTH = 1;
-    private final int SPACING_FROM_TOP = 10;
-    private final String IMAGE_URL = "https://files.cults3d.com/uploaders/15076709/illustration-file/e9eebbca-6e0f-4e28-a68f-fdd01962589f/1.jpg";
     private TetrisGame game;
     private Pane root;
     private Menu menu;
@@ -44,23 +44,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        menu = new Menu(this::onGameStart);
-        root = new Pane();
         game = new TetrisGame();
+        menu = new Menu(this::onGameStart, game);
+        root = new Pane();
         nextTetrominoDisplay = new NextTetrominoDisplay();
         nextTetrominoDisplay.setLayoutX(250);
         nextTetrominoDisplay.setLayoutY(10);
 
-        //Image tetrisLogoImage = new Image(requireNonNull(getClass().
-               // getResourceAsStream("Desktop/BA2/Tetris_logo_for_project.jpeg")));
-
-        /*ImageView tetrisLogoImageView = new ImageView(tetrisLogoImage);
-        tetrisLogoImageView.setX((TILE_SIZE * WIDTH - tetrisLogoImage.getWidth()) / 2);
-        tetrisLogoImageView.setY(SPACING_FROM_TOP);
-        tetrisLogoImageView.setFitWidth(200);  // Set a desired width
-        tetrisLogoImageView.setFitHeight(100); // Set a desired height*/
-
-        //root.getChildren().add(tetrisLogoImageView);
         root.getChildren().add(nextTetrominoDisplay);
         root.getChildren().addAll(menu.getMenuBox());
 
@@ -79,9 +69,6 @@ public class Main extends Application {
         root.setBackground(new Background(new BackgroundFill(Color.rgb(20, 20, 20),
                 CornerRadii.EMPTY,
                 Insets.EMPTY)));
-
-
-
 
         Scene scene = new Scene(root, TILE_SIZE * WIDTH, TILE_SIZE * HEIGHT);
         scene.setOnKeyPressed(event -> {
@@ -119,7 +106,6 @@ public class Main extends Application {
 
         int[][] board = game.getBoard();
 
-        // Draw the fixed tiles on the game board
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 if (board[y][x] == 1) {
@@ -189,7 +175,7 @@ public class Main extends Application {
         root.getChildren().clear();
         menu.getMenuBox().setVisible(true);
         root.getChildren().addAll(menu.getMenuBox());
-        menu.updateScore(game.getScore()); // Update the displayed score
+        menu.updateScore(game.getScore());
         menu.showGameOver();
         menu.getMenuBox().setVisible(true);
     }
@@ -197,5 +183,4 @@ public class Main extends Application {
     public enum GameState{
         MENU, PLAYING, GAME_OVER
     }
-
 }
