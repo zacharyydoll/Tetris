@@ -6,10 +6,17 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-import java.util.Arrays;
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author : Zachary Doll
  */
@@ -20,6 +27,10 @@ public class Main extends Application {
     private final int HEIGHT = 20;
     private final int SCORE_TEXT_X = 10;
     private final int SCORE_TEXT_Y = 20;
+    private final Color TILE_SEPARATOR_COLOR = Color.rgb(50, 50, 50);
+    private final int TILE_SEPARATOR_WIDTH = 1;
+    private final int SPACING_FROM_TOP = 10;
+    private final String IMAGE_URL = "https://files.cults3d.com/uploaders/15076709/illustration-file/e9eebbca-6e0f-4e28-a68f-fdd01962589f/1.jpg";
     private TetrisGame game;
     private Pane root;
     private Menu menu;
@@ -39,9 +50,18 @@ public class Main extends Application {
         nextTetrominoDisplay = new NextTetrominoDisplay();
         nextTetrominoDisplay.setLayoutX(250);
         nextTetrominoDisplay.setLayoutY(10);
+
+        //Image tetrisLogoImage = new Image(requireNonNull(getClass().
+               // getResourceAsStream("Desktop/BA2/Tetris_logo_for_project.jpeg")));
+
+        /*ImageView tetrisLogoImageView = new ImageView(tetrisLogoImage);
+        tetrisLogoImageView.setX((TILE_SIZE * WIDTH - tetrisLogoImage.getWidth()) / 2);
+        tetrisLogoImageView.setY(SPACING_FROM_TOP);
+        tetrisLogoImageView.setFitWidth(200);  // Set a desired width
+        tetrisLogoImageView.setFitHeight(100); // Set a desired height*/
+
+        //root.getChildren().add(tetrisLogoImageView);
         root.getChildren().add(nextTetrominoDisplay);
-
-
         root.getChildren().addAll(menu.getMenuBox());
 
         VBox menuBox = menu.getMenuBox();
@@ -56,7 +76,9 @@ public class Main extends Application {
         });
         menuBox.setMinWidth(TILE_SIZE * WIDTH);
         menuBox.setMinHeight(TILE_SIZE * HEIGHT);
-        root.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        root.setBackground(new Background(new BackgroundFill(Color.rgb(20, 20, 20),
+                CornerRadii.EMPTY,
+                Insets.EMPTY)));
 
 
 
@@ -85,6 +107,8 @@ public class Main extends Application {
         score.setX(SCORE_TEXT_X);
         score.setY(SCORE_TEXT_Y);
         score.setVisible(true);
+        score.setFill(Color.WHITE);
+        score.setFont(Font.font("Arial", FontWeight.BOLD, 13));
         nextTetrominoDisplay.displayTetronimo(game.getNextTetromino());
 
         root.getChildren().clear();
@@ -100,7 +124,9 @@ public class Main extends Application {
             for (int x = 0; x < WIDTH; x++) {
                 if (board[y][x] == 1) {
                     Rectangle tile = new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    tile.setFill(Color.BLUE);
+                    tile.setFill(Color.LIGHTGRAY);
+                    tile.setStroke(TILE_SEPARATOR_COLOR); // light black color for the border
+                    tile.setStrokeWidth(TILE_SEPARATOR_WIDTH);  // set the border width
                     root.getChildren().add(tile);
                 }
             }
@@ -117,6 +143,8 @@ public class Main extends Application {
                         Rectangle tile = new Rectangle((tetrominoX + j) * TILE_SIZE,
                                 (tetrominoY + i) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                         tile.setFill(currentTetromino.getColor());
+                        tile.setStroke(TILE_SEPARATOR_COLOR); // light black color for the border
+                        tile.setStrokeWidth(TILE_SEPARATOR_WIDTH);  // set the border width
                         root.getChildren().add(tile);
                     }
                 }
