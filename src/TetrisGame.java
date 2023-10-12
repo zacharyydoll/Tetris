@@ -38,7 +38,6 @@ public class TetrisGame {
     private void adjustDelay(int linesCleared) {
         // Ensure the delay doesn't go below half of the base delay for safety.
         currentDelay = Math.max(currentDelay - (linesCleared * ACCELERATION), 100);
-        System.out.println("Delay: " + currentDelay);
     }
 
     public void moveLeft() {

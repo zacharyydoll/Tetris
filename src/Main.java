@@ -1,10 +1,9 @@
 import Tetrominoes.Tetromino;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -26,6 +25,7 @@ public class Main extends Application {
     private Menu menu;
     private AnimationTimer gameLoop;
     private NextTetrominoDisplay nextTetrominoDisplay;
+    private GameState gameState = GameState.MENU;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,16 +48,31 @@ public class Main extends Application {
         menuBox.layoutXProperty().bind(root.widthProperty().subtract(menuBox.widthProperty()).divide(2));
         menuBox.layoutYProperty().bind(root.heightProperty().subtract(menuBox.heightProperty()).divide(2));
         menuBox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        menuBox.setPadding(new Insets(0, 0, 0, 0));
+        menuBox.getChildren().forEach(child -> {
+            if (child instanceof Region) {
+                VBox.setMargin(child, new Insets(0, 0, 0, 0));
+            }
+        });
+        menuBox.setMinWidth(TILE_SIZE * WIDTH);
+        menuBox.setMinHeight(TILE_SIZE * HEIGHT);
+        root.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+
+
+
 
         Scene scene = new Scene(root, TILE_SIZE * WIDTH, TILE_SIZE * HEIGHT);
         scene.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case LEFT -> game.moveLeft();
-                case RIGHT -> game.moveRight();
-                case DOWN -> game.moveDown();
-                case UP -> game.rotate();
+            if(gameState == GameState.PLAYING) {
+                switch (event.getCode()) {
+                    case LEFT -> game.moveLeft();
+                    case RIGHT -> game.moveRight();
+                    case DOWN -> game.moveDown();
+                    case UP -> game.rotate();
+                    default -> {}
+                }
+                drawGame();
             }
-            drawGame();
         });
 
         primaryStage.setScene(scene);
@@ -112,6 +127,7 @@ public class Main extends Application {
     }
 
     private void onGameStart() {
+        gameState = GameState.PLAYING;
         game.resetGame();
         gameLoop = new AnimationTimer() {
             long lastTick = 0;
@@ -141,12 +157,17 @@ public class Main extends Application {
     }
 
     private void displayGameOverMenu() {
+        gameState = GameState.GAME_OVER;
         root.getChildren().clear();
         menu.getMenuBox().setVisible(true);
         root.getChildren().addAll(menu.getMenuBox());
         menu.updateScore(game.getScore()); // Update the displayed score
         menu.showGameOver();
         menu.getMenuBox().setVisible(true);
+    }
+
+    public enum GameState{
+        MENU, PLAYING, GAME_OVER
     }
 
 }
