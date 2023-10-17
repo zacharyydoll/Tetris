@@ -81,7 +81,6 @@ public class Menu {
         menuBox.getChildren().addAll(gameOverText, highScoreText, currentScoreText,
                 startButton, difficultyButton, difficultyBox, exitButton);
 
-
         gameOverText.setVisible(false); //initially hidden
     }
 
@@ -206,7 +205,6 @@ public class Menu {
         gameInstance.setDifficulty(difficulty);
     }
 
-
     private void clearDifficultyBorders() {
         easyButton.setStyle(getButtonStyle("#007BFF", 18, "10px 20px", "none"));
         mediumButton.setStyle(getButtonStyle("#007BFF", 18, "10px 20px", "none"));
@@ -233,7 +231,4 @@ public class Menu {
                 "-fx-border-style: " + borderStyle + ";" +
                 "-fx-padding: " + padding + ";";
     }
-
-
-
 }

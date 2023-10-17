@@ -85,7 +85,7 @@ public class Main extends Application {
         });
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Tetris");
+        primaryStage.setTitle(game.GAME_NAME);
         primaryStage.show();
     }
 
@@ -155,7 +155,8 @@ public class Main extends Application {
                         return;
                     }
 
-                    if (now - lastTick > 1000000000 / 4) { // update 4 times per second
+                    long delayNanos = game.getCurrentDelay() * 1_000_000L;  // Convert delay from millis to nanos
+                    if (now - lastTick > delayNanos) {
                         lastTick = now;
                         game.update();
                         drawGame();

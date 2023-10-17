@@ -18,10 +18,11 @@ public class TetrisGame {
     private int currentDelay = BASE_DELAY;
     private Tetromino nextTetromino;
     private Difficulty difficulty = Difficulty.MEDIUM; //default difficulty
+    public final String GAME_NAME = "Tetris";
     private static final Map<Difficulty, Integer> DELAYS = Map.of(
-            Difficulty.EASY, 1500,
-            Difficulty.MEDIUM, 100,
-            Difficulty.HARD, 20
+            Difficulty.EASY, 1200,
+            Difficulty.MEDIUM, 600,
+            Difficulty.HARD, 300
     );
 
     public TetrisGame() {
@@ -45,7 +46,8 @@ public class TetrisGame {
     //TODO : fix delay according to difficulty level
     private void adjustDelay(int linesCleared) {
         int baseDelay = DELAYS.get(difficulty);
-        currentDelay = baseDelay - (linesCleared * ACCELERATION);
+        currentDelay = Math.max(baseDelay - (linesCleared * ACCELERATION), 20); // Clamp with 20ms delay
+        System.out.println("Current delay : " + currentDelay);
     }
 
     public void moveLeft() {
@@ -138,7 +140,12 @@ public class TetrisGame {
         this.spawnNewTetromino();
     }
 
+    public int getCurrentDelay() {
+        return this.currentDelay;
+    }
+
     public void setDifficulty(Difficulty difficulty) {
+        System.out.println("Setting difficulty to : " + difficulty);
         this.difficulty = difficulty;
         this.currentDelay = DELAYS.get(difficulty);
     }
